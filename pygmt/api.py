@@ -3,7 +3,7 @@ import ctypes
 
 # import the GMT 5 library.  Must be a shared library.
 # Should have a better way of locating it later
-libgmt = ctypes.CDLL("libgmt.so")
+libgmt = ctypes.CDLL("libgmt.5.dylib")
 
 class GMT_Pointer(ctypes.c_void_p):
     '''
