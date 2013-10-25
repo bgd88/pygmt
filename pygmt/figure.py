@@ -1,4 +1,5 @@
 import api
+import gmt_types
 from flags import *
 
 
@@ -107,9 +108,23 @@ class GMT_Figure:
         self._print_call('pswiggle '+module_options)
         self._gmt_session.call_module('pswiggle', module_options)
 
-
-
-
+    def load_vector(self,vectors):
+        #Definitely not thinking this is permamnent a way.....
+        family=io_family['vector']
+        method=io_method['duplicate']
+        geometry=io_geometry['point']
+        direction=io_direction['in']
+        approach=io_approach['via_vector']
+        wesn=None
+        dim=vectors.size()
+        # should be now be a pointer to a vector in GMT
+        temp_gmt_vec = self._gmt_session.GMT_Create_Data(session_ptr,family,geometry, 0, dim, None, None, 0, 0, None)
+        ###Doesn't exist yet :temp_gmt_vec = self._gmt_session.Populate_vector(self._gmt_session,temp_gmt_vec,vectors)
+        id = self._gmt_session.register_io(self._gmt_session,family,geometry+approach,direction,wesn,temp_gmt_vec)
+        filename = self._gmt_session.encode_id(self._gmt_session, id )
+        d_ptr = self._gmt_session.retrieve_data(self._gmt_session, id )
+        data = self._gmt_session.read_data(self._gmt_session, family, method, geometry, mode, wesn, input=ptr, ptr=None)
+        return data
 
 if __name__ == "__main__":
     fig = GMT_Figure("output.ps", range='g', projection='H7i', verbose=True)
